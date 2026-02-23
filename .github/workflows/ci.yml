@@ -4,12 +4,13 @@ on:
   push:
     branches:
       - main
-      - master
   pull_request:
 
 jobs:
   ci:
     runs-on: ubuntu-latest
+    env:
+      CI: true
 
     steps:
       - name: Checkout
@@ -33,5 +34,5 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Security audit (high/critical)
+      - name: Security audit (fail on high/critical)
         run: npm run audit

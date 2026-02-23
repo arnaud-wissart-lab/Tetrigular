@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "format": "prettier . --write",
     "test:ci": "ng test --watch=false --progress=false",
-    "audit": "npm audit --omit=dev --audit-level=high",
+    "audit": "node scripts/audit-ci.mjs",
     "ci": "npm run lint && npm run test:ci && npm run build && npm run audit"
   },
   "prettier": {

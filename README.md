@@ -32,5 +32,16 @@ Application: http://localhost:4200
 - `npm run format`: Prettier (write)
 - `npm run test`: tests unitaires
 - `npm run test:ci`: tests unitaires non interactifs
-- `npm run audit`: audit npm (fail sur high/critical en production)
+- `npm run audit`: audit npm en mode CI (fail sur high/critical en production)
 - `npm run ci`: lint + test:ci + build + audit
+
+## Mise à jour des dépendances
+
+1. Vérifier les versions disponibles: `npm outdated`.
+2. Mettre à jour les versions compatibles: `npm update`.
+3. Pour une montée majeure ciblée: `npm install <package>@latest`.
+4. Pour Angular, privilégier aussi: `npx ng update`.
+5. Valider la qualité et la sécurité: `npm run ci`.
+6. Committer `package.json` et `package-lock.json` ensemble.
+
+Dependabot est activé (`.github/dependabot.yml`) en vérification hebdomadaire, avec un maximum de 5 PR ouvertes et le label `dependencies`.
