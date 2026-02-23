@@ -1,6 +1,6 @@
 # Tetrigular
 
-Projet Angular standalone (TypeScript strict) avec un moteur Tetris simple et auditable.
+Projet Angular standalone (TypeScript strict) avec moteur de jeu découplé et rendu Canvas 2D.
 
 ## Lancer
 
@@ -13,12 +13,16 @@ Application: http://localhost:4200
 
 ## Controles
 
-- `←` / `→`: deplacer
-- `↑`: rotation
-- `↓`: descente
-- `Espace`: chute rapide
-- `P`: pause/reprise
-- `R`: nouvelle partie
+- `←` / `→`: déplacement (DAS/ARR)
+- `↓` (maintenu): soft drop
+- `Espace`: hard drop
+- `↑` ou `X`: rotation horaire
+- `Z`: rotation anti-horaire
+- `P`: pause / reprise
+
+## Capture GIF
+
+![Capture gameplay (placeholder)](docs/tetris-gameplay.gif)
 
 ## Scripts
 

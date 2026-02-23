@@ -8,15 +8,19 @@ import {
   mergePiece,
 } from '../domain/board';
 import { scoreForClearedLines } from '../domain/scoring';
+import { getTetrominoMatrix, rotateClockwise, rotateCounterClockwise } from '../domain/tetromino';
 import {
-  getTetrominoMatrix,
-  rotateClockwise,
-  rotateCounterClockwise,
-} from '../domain/tetromino';
-import { GRID_HEIGHT, GRID_WIDTH, Grid, Piece, RotationState, TetrominoType } from '../domain/types';
+  GRID_HEIGHT,
+  GRID_WIDTH,
+  Grid,
+  Piece,
+  RotationState,
+  TetrominoType,
+} from '../domain/types';
 import {
   BoardListener,
   GameEngineState,
+  LinesClearedListener,
   ScoreListener,
   ScoreState,
   StateListener,
@@ -91,6 +95,7 @@ export class GameEngine {
   private readonly stateBus = new EventBus<GameEngineState>();
   private readonly boardBus = new EventBus<Grid>();
   private readonly scoreBus = new EventBus<ScoreState>();
+  private readonly linesClearedBus = new EventBus<readonly number[]>();
 
   private rafHandle: number | null = null;
   private previousFrameTime: number | null = null;
@@ -132,6 +137,10 @@ export class GameEngine {
 
   onScoreChange(listener: ScoreListener): Unsubscribe {
     return this.scoreBus.subscribe(listener);
+  }
+
+  onLinesCleared(listener: LinesClearedListener): Unsubscribe {
+    return this.linesClearedBus.subscribe(listener);
   }
 
   getState(): GameEngineState {
@@ -361,9 +370,7 @@ export class GameEngine {
     return true;
   }
 
-  private tryRotate(
-    rotate: (rotation: RotationState) => RotationState,
-  ): boolean {
+  private tryRotate(rotate: (rotation: RotationState) => RotationState): boolean {
     if (this.state.status !== 'running' || this.state.currentPiece === null) {
       return false;
     }
@@ -454,6 +461,7 @@ export class GameEngine {
     }
 
     const mergedGrid = mergePiece(this.state.grid, this.state.currentPiece);
+    const clearedRows = this.getClearedRows(mergedGrid);
     const clearResult = clearLines(mergedGrid);
 
     const updatedLines = this.state.lines + clearResult.clearedLines;
@@ -483,6 +491,9 @@ export class GameEngine {
     this.lockDelayElapsedMs = 0;
     this.grounded = false;
     this.publishState(true, true);
+    if (clearedRows.length > 0) {
+      this.linesClearedBus.emit(clearedRows);
+    }
 
     if (willGameOver) {
       this.stopLoop();
@@ -518,6 +529,18 @@ export class GameEngine {
     }
 
     return mergePiece(board, this.state.currentPiece);
+  }
+
+  private getClearedRows(grid: Grid): number[] {
+    const rows: number[] = [];
+
+    for (let rowIndex = 0; rowIndex < grid.length; rowIndex += 1) {
+      if (grid[rowIndex].every((cell) => cell !== null)) {
+        rows.push(rowIndex);
+      }
+    }
+
+    return rows;
   }
 
   private publishState(boardChanged: boolean, scoreChanged: boolean): void {

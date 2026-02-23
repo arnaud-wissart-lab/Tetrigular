@@ -11,10 +11,7 @@ export interface LockResult {
   readonly locked: boolean;
 }
 
-export function createEmptyGrid(
-  width: number = GRID_WIDTH,
-  height: number = GRID_HEIGHT,
-): Grid {
+export function createEmptyGrid(width: number = GRID_WIDTH, height: number = GRID_HEIGHT): Grid {
   return Array.from({ length: height }, () => Array<Cell>(width).fill(null));
 }
 

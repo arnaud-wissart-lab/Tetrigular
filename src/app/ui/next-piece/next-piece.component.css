@@ -1,0 +1,24 @@
+:host {
+  display: block;
+}
+
+.next-piece {
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid #41527e;
+  background: linear-gradient(165deg, rgb(15 21 37 / 92%), rgb(18 26 46 / 92%));
+  box-shadow: 0 12px 28px rgb(5 8 16 / 34%);
+}
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  color: #d9e7ff;
+}
+
+.preview-canvas {
+  width: min(100%, 128px);
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}

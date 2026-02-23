@@ -1,0 +1,44 @@
+:host {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.overlay {
+  pointer-events: auto;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.65rem;
+  text-align: center;
+  padding: 1rem;
+  background: radial-gradient(circle at 50% 18%, rgb(39 58 98 / 78%), rgb(8 10 19 / 86%));
+  backdrop-filter: blur(2px);
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.4vw, 1.95rem);
+}
+
+p {
+  margin: 0;
+  color: #b7c7ed;
+}
+
+button {
+  margin-top: 0.25rem;
+  border: 1px solid #98b6ff;
+  border-radius: 9px;
+  padding: 0.55rem 1rem;
+  font-weight: 700;
+  color: #091123;
+  background: linear-gradient(135deg, #ffffff, #c8dbff);
+  cursor: pointer;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}

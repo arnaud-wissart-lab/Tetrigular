@@ -1,0 +1,46 @@
+:host {
+  display: block;
+}
+
+.hud {
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid #41527e;
+  background: linear-gradient(165deg, rgb(15 21 37 / 92%), rgb(18 26 46 / 92%));
+  box-shadow: 0 12px 28px rgb(5 8 16 / 34%);
+}
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  color: #d9e7ff;
+}
+
+.stats {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.stats div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+dt {
+  color: #96a7cf;
+}
+
+dd {
+  margin: 0;
+  font-weight: 700;
+  color: #f4f8ff;
+}
+
+.keys {
+  margin: 0.9rem 0 0;
+  color: #99aad1;
+  font-size: 0.82rem;
+}

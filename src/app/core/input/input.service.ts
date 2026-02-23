@@ -5,14 +5,7 @@ export const DEFAULT_DAS_MS = 120;
 export const DEFAULT_ARR_MS = 30;
 
 type HorizontalCode = 'ArrowLeft' | 'ArrowRight';
-type ManagedCode =
-  | HorizontalCode
-  | 'ArrowDown'
-  | 'ArrowUp'
-  | 'KeyX'
-  | 'KeyZ'
-  | 'Space'
-  | 'KeyP';
+type ManagedCode = HorizontalCode | 'ArrowDown' | 'ArrowUp' | 'KeyX' | 'KeyZ' | 'Space' | 'KeyP';
 
 export type InputAction =
   | { readonly type: 'moveLeft' }

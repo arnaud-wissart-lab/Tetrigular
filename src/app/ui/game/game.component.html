@@ -1,0 +1,33 @@
+<main class="game-page">
+  <section class="board-section">
+    <header class="title">
+      <h1>Tetrigular</h1>
+      <p>Canvas 2D + GameEngine découplé</p>
+    </header>
+
+    <div class="board-shell">
+      <canvas
+        #boardCanvas
+        class="board-canvas"
+        tabindex="0"
+        aria-label="Plateau de jeu Tetris"
+        (pointerdown)="focusCanvas()"
+      ></canvas>
+
+      <app-overlay
+        [status]="status()"
+        (startRequested)="startGame()"
+        (restartRequested)="restartGame()"
+        (resumeRequested)="resumeGame()"
+      ></app-overlay>
+    </div>
+  </section>
+
+  <aside class="side-panel">
+    <app-hud [status]="status()" [score]="score()" [lines]="lines()" [level]="level()"></app-hud>
+
+    <app-next-piece [nextPiece]="nextPiece()"></app-next-piece>
+
+    <button type="button" class="restart-btn" (click)="restartGame()">Restart</button>
+  </aside>
+</main>
