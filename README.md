@@ -1,4 +1,4 @@
-# tetris-angular
+# Tetrigular
 
 Projet Angular standalone (TypeScript strict) avec un moteur Tetris simple et auditable.
 
