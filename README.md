@@ -11,7 +11,7 @@ npm run start
 
 Application: http://localhost:4200
 
-## Controles
+## Contrôles
 
 - `←` / `→`: déplacement (DAS/ARR)
 - `↓` (maintenu): soft drop

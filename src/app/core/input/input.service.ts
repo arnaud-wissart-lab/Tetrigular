@@ -76,7 +76,7 @@ export class InputService implements OnDestroy {
 
   configureRepeat(dasMs: number, arrMs: number): void {
     if (dasMs <= 0 || arrMs <= 0) {
-      throw new Error('DAS et ARR doivent etre strictement positifs.');
+      throw new Error('DAS et ARR doivent être strictement positifs.');
     }
 
     this.dasMs = dasMs;

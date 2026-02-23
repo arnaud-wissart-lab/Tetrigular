@@ -8,6 +8,6 @@ export class KeyboardInputService {
   private readonly source$: Observable<KeyboardEvent> =
     typeof window === 'undefined' ? EMPTY : fromEvent<KeyboardEvent>(window, 'keydown');
 
-  // Un flux partage evite plusieurs ecoutes globales du clavier.
+  // Un flux partagé évite plusieurs écoutes globales du clavier.
   readonly keydown$ = this.source$.pipe(share());
 }

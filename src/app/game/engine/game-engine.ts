@@ -247,7 +247,7 @@ export class GameEngine {
     }
 
     while (this.tryMoveDown()) {
-      // Boucle volontaire: on cherche la position finale instantanee.
+      // Boucle volontaire : on cherche la position finale instantanée.
     }
 
     this.lockCurrentPiece();
@@ -266,7 +266,7 @@ export class GameEngine {
       this.gravityAccumulatorMs -= intervalMs;
 
       if (!this.tryMoveDown()) {
-        // On stoppe ici pour eviter de "consommer" plusieurs collisions en une frame.
+        // On stoppe ici pour éviter de "consommer" plusieurs collisions en une frame.
         this.gravityAccumulatorMs = 0;
         break;
       }

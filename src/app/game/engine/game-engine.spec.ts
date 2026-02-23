@@ -7,7 +7,7 @@ class FixedRandomizer {
   next(): TetrominoType {
     const value = this.sequence.shift();
     if (value === undefined) {
-      throw new Error('Sequence de test epuisee.');
+      throw new Error('Séquence de test épuisée.');
     }
 
     return value;
@@ -18,7 +18,7 @@ const noopRaf = () => 1;
 const noopCaf = () => {};
 
 describe('GameEngine', () => {
-  it('place correctement la piece avec hardDrop', () => {
+  it('place correctement la pièce avec hardDrop', () => {
     const engine = new GameEngine({
       randomizer: new FixedRandomizer([
         TetrominoType.O,

@@ -61,7 +61,7 @@ export function shouldLockPiece(grid: Grid, piece: Piece): boolean {
 
 export function mergePiece(grid: Grid, piece: Piece): Grid {
   if (hasCollision(grid, piece)) {
-    throw new Error('Impossible de fusionner une piece en collision.');
+    throw new Error('Impossible de fusionner une pièce en collision.');
   }
 
   const nextGrid = cloneGrid(grid);

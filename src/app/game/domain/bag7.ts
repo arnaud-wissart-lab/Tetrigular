@@ -24,7 +24,7 @@ export class Bag7Randomizer {
 
     const piece = this.bag.pop();
     if (piece === undefined) {
-      throw new Error('Le 7-bag ne peut pas etre vide ici.');
+      throw new Error('Le 7-bag ne peut pas être vide ici.');
     }
 
     return piece;

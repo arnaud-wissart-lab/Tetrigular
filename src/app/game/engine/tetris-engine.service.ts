@@ -198,7 +198,7 @@ export class TetrisEngineService {
       return state;
     }
 
-    // Le plateau est copie avant ecriture pour garder un flux d'etat explicite.
+    // Le plateau est copié avant écriture pour garder un flux d'état explicite.
     const board = this.cloneBoard(state.board);
 
     for (let rowIndex = 0; rowIndex < state.activePiece.matrix.length; rowIndex += 1) {

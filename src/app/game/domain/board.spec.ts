@@ -17,7 +17,7 @@ function pieceAt(
 }
 
 describe('board domain', () => {
-  it('detecte une piece valide dans une grille vide', () => {
+  it('détecte une pièce valide dans une grille vide', () => {
     const grid = createEmptyGrid();
     const piece = pieceAt(TetrominoType.T, 3, 0);
 
@@ -25,7 +25,7 @@ describe('board domain', () => {
     expect(canPlacePiece(grid, piece)).toBe(true);
   });
 
-  it('detecte une collision sur le bord gauche', () => {
+  it('détecte une collision sur le bord gauche', () => {
     const grid = createEmptyGrid();
     const piece = pieceAt(TetrominoType.O, -1, 0);
 
@@ -33,7 +33,7 @@ describe('board domain', () => {
     expect(canPlacePiece(grid, piece)).toBe(false);
   });
 
-  it('detecte une collision avec des cellules occupees', () => {
+  it('détecte une collision avec des cellules occupées', () => {
     const grid = createEmptyGrid();
     grid[1][4] = TetrominoType.I;
     const piece = pieceAt(TetrominoType.O, 4, 0);
@@ -41,7 +41,7 @@ describe('board domain', () => {
     expect(hasCollision(grid, piece)).toBe(true);
   });
 
-  it('verrouille la piece lorsqu elle ne peut plus descendre', () => {
+  it('verrouille la pièce lorsqu’elle ne peut plus descendre', () => {
     const grid = createEmptyGrid();
     const piece = pieceAt(TetrominoType.O, 4, 18);
 
