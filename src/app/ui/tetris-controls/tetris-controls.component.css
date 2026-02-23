@@ -1,0 +1,72 @@
+:host {
+  display: block;
+}
+
+.panel {
+  min-width: 220px;
+  padding: 1rem;
+  background: #1a2338;
+  border: 1px solid #415175;
+  border-radius: 12px;
+}
+
+h2 {
+  margin: 0 0 1rem;
+}
+
+.stats {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 0 1.2rem;
+}
+
+.stats div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+dt {
+  color: #b7c0dc;
+}
+
+dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+button {
+  flex: 1;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #5f7099;
+  border-radius: 8px;
+  background: #e5ebff;
+  color: #1a2240;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.status {
+  margin: 0 0 0.5rem;
+}
+
+.status--danger {
+  color: #fb7185;
+  font-weight: 700;
+}
+
+.controls {
+  margin: 0;
+  color: #b7c0dc;
+  font-size: 0.9rem;
+}
