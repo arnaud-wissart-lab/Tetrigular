@@ -121,10 +121,29 @@ fi
 log "Démarrage du conteneur tetris (8081 -> 80)"
 docker run -d --name tetris -p 8081:80 --restart unless-stopped tetris-app:latest
 
-log "Vérification HTTP locale sur 127.0.0.1:8081"
-http_status="$(curl -sS -o /dev/null -I -w '%{http_code}' http://127.0.0.1:8081)"
+log "Vérification HTTP locale sur 127.0.0.1:8081 (attente max 60s)"
+max_attempts=30
+sleep_seconds=2
+http_status=""
+
+for ((attempt=1; attempt<=max_attempts; attempt+=1)); do
+  http_status="$(curl -sS -o /dev/null -I -w '%{http_code}' --connect-timeout 2 --max-time 5 http://127.0.0.1:8081 || true)"
+
+  if [ "$http_status" = "200" ]; then
+    log "Healthcheck OK (tentative ${attempt}/${max_attempts})"
+    break
+  fi
+
+  log "Service pas encore prêt (tentative ${attempt}/${max_attempts}, code: ${http_status:-n/a})"
+  sleep "$sleep_seconds"
+done
+
 if [ "$http_status" != "200" ]; then
-  log "La vérification HTTP a échoué (code ${http_status})"
+  log "La vérification HTTP a échoué après ${max_attempts} tentatives (dernier code: ${http_status:-n/a})"
+  log "Etat du conteneur tetris:"
+  docker ps -a --filter name=tetris || true
+  log "Derniers logs du conteneur tetris:"
+  docker logs --tail 120 tetris || true
   exit 1
 fi
 
