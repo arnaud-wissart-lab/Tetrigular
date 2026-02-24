@@ -35,6 +35,7 @@ export interface GameEngineOptions {
   readonly width?: number;
   readonly height?: number;
   readonly lockDelayMs?: number;
+  readonly maxLockResets?: number;
   readonly softDropFactor?: number;
   readonly gravityForLevel?: (level: number) => number;
   readonly randomizer?: PieceRandomizer;
@@ -86,6 +87,7 @@ export class GameEngine {
   private readonly width: number;
   private readonly height: number;
   private readonly lockDelayMs: number;
+  private readonly maxLockResets: number;
   private readonly softDropFactor: number;
   private readonly gravityForLevel: (level: number) => number;
   private readonly randomizer: PieceRandomizer;
@@ -102,6 +104,7 @@ export class GameEngine {
   private gravityAccumulatorMs = 0;
   private lockDelayElapsedMs = 0;
   private grounded = false;
+  private lockResetCount = 0;
   private softDropEnabled = false;
 
   private state: GameEngineState;
@@ -109,7 +112,8 @@ export class GameEngine {
   constructor(options: GameEngineOptions = {}) {
     this.width = options.width ?? GRID_WIDTH;
     this.height = options.height ?? GRID_HEIGHT;
-    this.lockDelayMs = options.lockDelayMs ?? 250;
+    this.lockDelayMs = options.lockDelayMs ?? 500;
+    this.maxLockResets = Math.max(0, options.maxLockResets ?? 15);
     this.softDropFactor = options.softDropFactor ?? 8;
     this.gravityForLevel = options.gravityForLevel ?? defaultGravityForLevel;
     this.randomizer = options.randomizer ?? new Bag7Randomizer();
@@ -217,6 +221,7 @@ export class GameEngine {
     this.gravityAccumulatorMs = 0;
     this.lockDelayElapsedMs = 0;
     this.grounded = false;
+    this.lockResetCount = 0;
     this.softDropEnabled = false;
     this.publishState(true, true);
   }
@@ -295,6 +300,7 @@ export class GameEngine {
     this.gravityAccumulatorMs = 0;
     this.lockDelayElapsedMs = 0;
     this.grounded = false;
+    this.lockResetCount = 0;
     this.softDropEnabled = false;
     this.publishState(true, true);
 
@@ -429,11 +435,7 @@ export class GameEngine {
       return;
     }
 
-    const pieceBelow: Piece = {
-      ...this.state.currentPiece,
-      y: this.state.currentPiece.y + 1,
-    };
-    const touchingFloor = hasCollision(this.state.grid, pieceBelow);
+    const touchingFloor = this.isTouchingFloor(this.state.currentPiece);
 
     if (!touchingFloor) {
       this.grounded = false;
@@ -490,6 +492,7 @@ export class GameEngine {
     this.gravityAccumulatorMs = 0;
     this.lockDelayElapsedMs = 0;
     this.grounded = false;
+    this.lockResetCount = 0;
     this.publishState(true, true);
     if (clearedRows.length > 0) {
       this.linesClearedBus.emit(clearedRows);
@@ -501,6 +504,21 @@ export class GameEngine {
   }
 
   private resetLockDelayAfterAction(): void {
+    if (this.state.currentPiece === null) {
+      return;
+    }
+
+    if (!this.isTouchingFloor(this.state.currentPiece)) {
+      this.grounded = false;
+      this.lockDelayElapsedMs = 0;
+      return;
+    }
+
+    if (this.lockResetCount >= this.maxLockResets) {
+      return;
+    }
+
+    this.lockResetCount += 1;
     this.grounded = false;
     this.lockDelayElapsedMs = 0;
   }
@@ -541,6 +559,15 @@ export class GameEngine {
     }
 
     return rows;
+  }
+
+  private isTouchingFloor(piece: Piece): boolean {
+    const pieceBelow: Piece = {
+      ...piece,
+      y: piece.y + 1,
+    };
+
+    return hasCollision(this.state.grid, pieceBelow);
   }
 
   private publishState(boardChanged: boolean, scoreChanged: boolean): void {

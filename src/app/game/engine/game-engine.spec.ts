@@ -80,6 +80,80 @@ describe('GameEngine', () => {
     expect(lockedCells).toBe(4);
   });
 
+  it('permet de décaler une pièce au dernier moment avant verrouillage', () => {
+    const engine = new GameEngine({
+      randomizer: new FixedRandomizer([
+        TetrominoType.O,
+        TetrominoType.I,
+        TetrominoType.T,
+        TetrominoType.S,
+      ]),
+      gravityForLevel: () => 1,
+      lockDelayMs: 220,
+      requestAnimationFrame: noopRaf,
+      cancelAnimationFrame: noopCaf,
+    });
+
+    engine.start();
+    const spawnX = engine.getState().currentPiece?.x ?? 0;
+
+    engine.tick(5000);
+    engine.tick(170);
+    expect(engine.moveLeft()).toBe(true);
+
+    engine.tick(170);
+    engine.tick(170);
+    let lockedCells = engine
+      .getState()
+      .grid.flat()
+      .filter((cell) => cell === TetrominoType.O).length;
+    expect(lockedCells).toBe(0);
+
+    engine.tick(80);
+    const grid = engine.getState().grid;
+    lockedCells = grid.flat().filter((cell) => cell === TetrominoType.O).length;
+
+    expect(lockedCells).toBe(4);
+    expect(grid[18][spawnX - 1]).toBe(TetrominoType.O);
+    expect(grid[18][spawnX]).toBe(TetrominoType.O);
+    expect(grid[19][spawnX - 1]).toBe(TetrominoType.O);
+    expect(grid[19][spawnX]).toBe(TetrominoType.O);
+  });
+
+  it('limite les resets de lock delay pour éviter le stall infini', () => {
+    const engine = new GameEngine({
+      randomizer: new FixedRandomizer([
+        TetrominoType.O,
+        TetrominoType.I,
+        TetrominoType.T,
+        TetrominoType.S,
+      ]),
+      gravityForLevel: () => 1,
+      lockDelayMs: 200,
+      maxLockResets: 1,
+      requestAnimationFrame: noopRaf,
+      cancelAnimationFrame: noopCaf,
+    });
+
+    engine.start();
+
+    engine.tick(5000);
+    engine.tick(150);
+    expect(engine.moveLeft()).toBe(true);
+
+    engine.tick(150);
+    engine.tick(150);
+    expect(engine.moveRight()).toBe(true);
+
+    engine.tick(60);
+    const lockedCells = engine
+      .getState()
+      .grid.flat()
+      .filter((cell) => cell === TetrominoType.O).length;
+
+    expect(lockedCells).toBe(4);
+  });
+
   it('consomme next piece puis la remplace', () => {
     const engine = new GameEngine({
       randomizer: new FixedRandomizer([
