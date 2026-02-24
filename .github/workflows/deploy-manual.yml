@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: Environnement cible (ex: home)
+        description: "Environnement cible (ex: home)"
         required: true
         default: home
         type: string
       ref:
-        description: Référence Git à déployer (branche, tag, SHA)
+        description: "Référence Git à déployer (branche, tag, SHA)"
         required: true
         default: main
         type: string
