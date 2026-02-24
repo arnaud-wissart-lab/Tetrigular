@@ -3,8 +3,8 @@
     @switch (status()) {
       @case ('idle') {
         <h2>Tetrigular</h2>
-        <p>Clique puis joue au clavier.</p>
-        <button type="button" (click)="startRequested.emit()">Start</button>
+        <p>Utilise les flèches pour déplacer et la barre espace pour lâcher.</p>
+        <button type="button" (click)="startRequested.emit()">Démarrer</button>
       }
       @case ('paused') {
         <h2>Pause</h2>
@@ -12,9 +12,9 @@
         <button type="button" (click)="resumeRequested.emit()">Reprendre</button>
       }
       @case ('gameOver') {
-        <h2>Game Over</h2>
+        <h2>Partie terminée</h2>
         <p>Relance une partie.</p>
-        <button type="button" (click)="restartRequested.emit()">Restart</button>
+        <button type="button" (click)="restartRequested.emit()">Recommencer</button>
       }
     }
   </div>

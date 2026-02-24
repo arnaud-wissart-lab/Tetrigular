@@ -22,7 +22,7 @@ export class HudComponent {
       case 'paused':
         return 'Pause';
       case 'gameOver':
-        return 'Game Over';
+        return 'Partie terminée';
     }
   });
 }

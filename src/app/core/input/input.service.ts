@@ -5,7 +5,7 @@ export const DEFAULT_DAS_MS = 120;
 export const DEFAULT_ARR_MS = 30;
 
 type HorizontalCode = 'ArrowLeft' | 'ArrowRight';
-type ManagedCode = HorizontalCode | 'ArrowDown' | 'ArrowUp' | 'KeyX' | 'KeyZ' | 'Space' | 'KeyP';
+type ManagedCode = HorizontalCode | 'ArrowDown' | 'ArrowUp' | 'Space' | 'KeyP';
 
 export type InputAction =
   | { readonly type: 'moveLeft' }
@@ -121,11 +121,7 @@ export class InputService implements OnDestroy {
         }
         return;
       case 'ArrowUp':
-      case 'KeyX':
         this.emitAction({ type: 'rotateCW' });
-        return;
-      case 'KeyZ':
-        this.emitAction({ type: 'rotateCCW' });
         return;
       case 'Space':
         this.emitAction({ type: 'hardDrop' });
@@ -190,8 +186,6 @@ export class InputService implements OnDestroy {
       case 'ArrowRight':
       case 'ArrowDown':
       case 'ArrowUp':
-      case 'KeyX':
-      case 'KeyZ':
       case 'Space':
       case 'KeyP':
         return code;

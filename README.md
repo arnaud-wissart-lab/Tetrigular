@@ -50,10 +50,9 @@ Application disponible sur: http://localhost:8080
 ## Contrôles
 
 - `←` / `→`: déplacement (DAS/ARR)
-- `↓` (maintenu): soft drop
-- `Espace`: hard drop
-- `↑` ou `X`: rotation horaire
-- `Z`: rotation anti-horaire
+- `↓` (maintenu): accélération de chute
+- `Espace`: lâcher (chute instantanée)
+- `↑`: rotation
 - `P`: pause / reprise
 
 ## Capture GIF
