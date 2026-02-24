@@ -1,0 +1,37 @@
+name: Déploiement Manuel
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environnement cible (ex: home)
+        required: true
+        default: home
+        type: string
+      ref:
+        description: Référence Git à déployer (branche, tag, SHA)
+        required: true
+        default: main
+        type: string
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux, ci]
+    env:
+      DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+      DEPLOY_REF: ${{ inputs.ref }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+
+    steps:
+      - name: Checkout de la référence demandée
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - name: Exécuter le déploiement home
+        run: |
+          chmod +x scripts/deploy-home.sh
+          scripts/deploy-home.sh
