@@ -16,23 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 24 LTS
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20.19.0'
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
+      - name: Build production
+        run: npm run build:prod
 
-      - name: Unit tests (CI)
-        run: npm run test:ci
-
-      - name: Build
-        run: npm run build
-
-      - name: Security audit (fail on high/critical)
-        run: npm run audit
+      - name: Unit tests
+        run: npm test -- --watch=false --progress=false

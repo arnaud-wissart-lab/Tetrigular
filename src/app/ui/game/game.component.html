@@ -26,7 +26,29 @@
   <aside class="side-panel">
     <app-hud [status]="status()" [score]="score()" [lines]="lines()" [level]="level()"></app-hud>
 
-    <app-next-piece [nextPiece]="nextPiece()"></app-next-piece>
+    <app-next-piece [nextPiece]="nextPiece()" [theme]="theme()"></app-next-piece>
+
+    <section class="theme-panel" aria-label="Options de thème">
+      <h2>Thème</h2>
+      <div class="theme-actions">
+        <button
+          type="button"
+          class="theme-btn"
+          [class.theme-btn--active]="theme() === 'day'"
+          (click)="setTheme('day')"
+        >
+          Jour
+        </button>
+        <button
+          type="button"
+          class="theme-btn"
+          [class.theme-btn--active]="theme() === 'night'"
+          (click)="setTheme('night')"
+        >
+          Nuit
+        </button>
+      </div>
+    </section>
 
     <button type="button" class="restart-btn" (click)="restartGame()">Restart</button>
   </aside>

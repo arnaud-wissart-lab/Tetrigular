@@ -14,7 +14,7 @@
   gap: 0.65rem;
   text-align: center;
   padding: 1rem;
-  background: radial-gradient(circle at 50% 18%, rgb(39 58 98 / 78%), rgb(8 10 19 / 86%));
+  background: radial-gradient(circle at 50% 18%, var(--overlay-bg-start), var(--overlay-bg-end));
   backdrop-filter: blur(2px);
 }
 
@@ -25,17 +25,21 @@ h2 {
 
 p {
   margin: 0;
-  color: #b7c7ed;
+  color: var(--overlay-text);
 }
 
 button {
   margin-top: 0.25rem;
-  border: 1px solid #98b6ff;
+  border: 1px solid var(--overlay-button-border);
   border-radius: 9px;
   padding: 0.55rem 1rem;
   font-weight: 700;
-  color: #091123;
-  background: linear-gradient(135deg, #ffffff, #c8dbff);
+  color: var(--overlay-button-text);
+  background: linear-gradient(
+    135deg,
+    var(--overlay-button-bg-start),
+    var(--overlay-button-bg-end)
+  );
   cursor: pointer;
 }
 

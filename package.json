@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
@@ -26,6 +27,10 @@
     ]
   },
   "private": true,
+  "engines": {
+    "node": ">=20.19.0",
+    "npm": ">=9"
+  },
   "packageManager": "npm@11.6.2",
   "dependencies": {
     "@angular/common": "^21.1.0",

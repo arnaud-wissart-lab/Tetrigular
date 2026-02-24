@@ -10,6 +10,7 @@
   display: grid;
   grid-template-columns: minmax(340px, 1fr) 280px;
   gap: 1.3rem;
+  color: var(--text-primary);
 }
 
 .title {
@@ -24,16 +25,13 @@
 
 .title p {
   margin: 0.25rem 0 0;
-  color: #a8b9e0;
+  color: var(--text-muted);
 }
 
 .board-shell {
   position: relative;
-  border-radius: 16px;
-  padding: 0.7rem;
-  background: linear-gradient(145deg, rgb(26 35 58 / 85%), rgb(11 16 30 / 94%));
-  border: 1px solid #43527c;
-  box-shadow: 0 20px 44px rgb(4 8 18 / 44%);
+  border-radius: 14px;
+  overflow: hidden;
 }
 
 .board-canvas {
@@ -43,12 +41,13 @@
   display: block;
   margin: 0 auto;
   aspect-ratio: 1 / 2;
-  border-radius: 12px;
+  border-radius: inherit;
   outline: none;
+  box-shadow: 0 16px 36px var(--board-shell-shadow);
 }
 
 .board-canvas:focus-visible {
-  box-shadow: 0 0 0 2px #a8c4ff;
+  box-shadow: 0 0 0 2px var(--canvas-focus-ring);
 }
 
 .side-panel {
@@ -57,13 +56,50 @@
   gap: 1rem;
 }
 
+.theme-panel {
+  padding: 1rem;
+  border-radius: 14px;
+  border: 1px solid var(--panel-border);
+  background: linear-gradient(165deg, var(--panel-bg-start), var(--panel-bg-end));
+  box-shadow: 0 12px 28px var(--panel-shadow);
+}
+
+.theme-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+  color: var(--panel-title);
+}
+
+.theme-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.theme-btn {
+  border: 1px solid var(--theme-btn-border);
+  border-radius: 10px;
+  padding: 0.5rem 0.75rem;
+  font-weight: 700;
+  color: var(--theme-btn-text);
+  background: linear-gradient(145deg, var(--theme-btn-bg-start), var(--theme-btn-bg-end));
+  cursor: pointer;
+}
+
+.theme-btn--active {
+  border-color: var(--theme-btn-active-border);
+  background: linear-gradient(145deg, var(--theme-btn-active-bg-start), var(--theme-btn-active-bg-end));
+  box-shadow: 0 0 0 1px var(--theme-btn-active-shadow);
+  color: var(--button-text);
+}
+
 .restart-btn {
-  border: 1px solid #84a5f9;
+  border: 1px solid var(--button-border);
   border-radius: 11px;
   padding: 0.6rem 0.85rem;
   font-weight: 700;
-  color: #08122c;
-  background: linear-gradient(145deg, #f8fcff, #c8daff);
+  color: var(--button-text);
+  background: linear-gradient(145deg, var(--button-bg-start), var(--button-bg-end));
   cursor: pointer;
 }
 
@@ -83,6 +119,10 @@
 
   .side-panel {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .theme-panel {
+    grid-column: 1 / -1;
   }
 
   .restart-btn {

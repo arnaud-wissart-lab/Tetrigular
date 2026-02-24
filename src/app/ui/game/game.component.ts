@@ -31,7 +31,38 @@ interface ClearFlash {
   readonly durationMs: number;
 }
 
+type ThemeMode = 'night' | 'day';
+
+interface CanvasTheme {
+  readonly backgroundStart: string;
+  readonly backgroundEnd: string;
+  readonly gridLine: string;
+  readonly ghostStroke: string;
+  readonly ghostFill: string;
+  readonly flashRgb: string;
+}
+
 const CLEAR_FLASH_MS = 190;
+const THEME_STORAGE_KEY = 'tetrigular-theme';
+
+const CANVAS_THEME: Record<ThemeMode, CanvasTheme> = {
+  night: {
+    backgroundStart: '#0b1020',
+    backgroundEnd: '#10192f',
+    gridLine: 'rgb(146 168 218 / 17%)',
+    ghostStroke: 'rgb(218 232 255 / 45%)',
+    ghostFill: 'rgb(218 232 255 / 10%)',
+    flashRgb: '255 255 255',
+  },
+  day: {
+    backgroundStart: '#f5f9ff',
+    backgroundEnd: '#dce9ff',
+    gridLine: 'rgb(68 102 154 / 22%)',
+    ghostStroke: 'rgb(53 86 138 / 45%)',
+    ghostFill: 'rgb(53 86 138 / 12%)',
+    flashRgb: '33 58 99',
+  },
+};
 
 const PIECE_COLORS: Record<TetrominoType, string> = {
   I: '#35f3ff',
@@ -65,6 +96,7 @@ export class GameComponent implements AfterViewInit {
   protected readonly lines = signal(0);
   protected readonly level = signal(1);
   protected readonly nextPiece = signal<TetrominoType | null>(null);
+  protected readonly theme = signal<ThemeMode>(this.resolveInitialTheme());
 
   private lockedGrid: Grid = createEmptyGrid();
   private currentPiece: Piece | null = null;
@@ -73,6 +105,10 @@ export class GameComponent implements AfterViewInit {
   private context: CanvasRenderingContext2D | null = null;
   private canvasElement: HTMLCanvasElement | null = null;
   private renderHandle: number | null = null;
+
+  constructor() {
+    this.applyTheme(this.theme());
+  }
 
   ngAfterViewInit(): void {
     this.canvasElement = this.boardCanvasRef?.nativeElement ?? null;
@@ -128,6 +164,15 @@ export class GameComponent implements AfterViewInit {
 
   protected focusCanvas(): void {
     this.canvasElement?.focus();
+  }
+
+  protected setTheme(theme: ThemeMode): void {
+    if (this.theme() === theme) {
+      return;
+    }
+
+    this.theme.set(theme);
+    this.applyTheme(theme);
   }
 
   private handleInputAction(action: InputAction): void {
@@ -213,21 +258,27 @@ export class GameComponent implements AfterViewInit {
     const canvasHeight = this.canvasElement.height;
     const cellWidth = canvasWidth / GRID_WIDTH;
     const cellHeight = canvasHeight / GRID_HEIGHT;
+    const canvasTheme = CANVAS_THEME[this.theme()];
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    this.drawBackground(ctx, canvasWidth, canvasHeight);
+    this.drawBackground(ctx, canvasWidth, canvasHeight, canvasTheme);
 
     const board = this.getComposedBoard();
     this.drawGrid(ctx, board, cellWidth, cellHeight);
-    this.drawGhostPiece(ctx, cellWidth, cellHeight);
-    this.drawClearFlashes(ctx, timestamp, cellWidth, cellHeight);
-    this.drawGridLines(ctx, canvasWidth, canvasHeight, cellWidth, cellHeight);
+    this.drawGhostPiece(ctx, cellWidth, cellHeight, canvasTheme);
+    this.drawClearFlashes(ctx, timestamp, cellWidth, cellHeight, canvasTheme);
+    this.drawGridLines(ctx, canvasWidth, canvasHeight, cellWidth, cellHeight, canvasTheme);
   }
 
-  private drawBackground(ctx: CanvasRenderingContext2D, width: number, height: number): void {
+  private drawBackground(
+    ctx: CanvasRenderingContext2D,
+    width: number,
+    height: number,
+    theme: CanvasTheme,
+  ): void {
     const gradient = ctx.createLinearGradient(0, 0, 0, height);
-    gradient.addColorStop(0, '#0b1020');
-    gradient.addColorStop(1, '#10192f');
+    gradient.addColorStop(0, theme.backgroundStart);
+    gradient.addColorStop(1, theme.backgroundEnd);
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
   }
@@ -268,9 +319,10 @@ export class GameComponent implements AfterViewInit {
     height: number,
     cellWidth: number,
     cellHeight: number,
+    theme: CanvasTheme,
   ): void {
     ctx.save();
-    ctx.strokeStyle = 'rgb(146 168 218 / 17%)';
+    ctx.strokeStyle = theme.gridLine;
     ctx.lineWidth = 1;
 
     for (let col = 0; col <= GRID_WIDTH; col += 1) {
@@ -288,10 +340,6 @@ export class GameComponent implements AfterViewInit {
       ctx.lineTo(width, y);
       ctx.stroke();
     }
-
-    ctx.strokeStyle = 'rgb(176 196 238 / 36%)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(1, 1, width - 2, height - 2);
     ctx.restore();
   }
 
@@ -299,6 +347,7 @@ export class GameComponent implements AfterViewInit {
     ctx: CanvasRenderingContext2D,
     cellWidth: number,
     cellHeight: number,
+    theme: CanvasTheme,
   ): void {
     if (this.currentPiece === null) {
       return;
@@ -311,8 +360,8 @@ export class GameComponent implements AfterViewInit {
 
     const matrix = getTetrominoMatrix(ghostPiece.type, ghostPiece.rotation);
     ctx.save();
-    ctx.strokeStyle = 'rgb(218 232 255 / 45%)';
-    ctx.fillStyle = 'rgb(218 232 255 / 10%)';
+    ctx.strokeStyle = theme.ghostStroke;
+    ctx.fillStyle = theme.ghostFill;
     ctx.lineWidth = 1.2;
 
     for (let row = 0; row < matrix.length; row += 1) {
@@ -336,6 +385,7 @@ export class GameComponent implements AfterViewInit {
     timestamp: number,
     cellWidth: number,
     cellHeight: number,
+    theme: CanvasTheme,
   ): void {
     this.flashes = this.flashes.filter((flash) => timestamp - flash.startedAt <= flash.durationMs);
 
@@ -343,8 +393,8 @@ export class GameComponent implements AfterViewInit {
       const progress = Math.min(1, (timestamp - flash.startedAt) / flash.durationMs);
       const alpha = 0.55 * (1 - progress);
       ctx.save();
-      ctx.fillStyle = `rgb(255 255 255 / ${alpha})`;
-      ctx.shadowColor = 'rgb(255 255 255 / 72%)';
+      ctx.fillStyle = `rgb(${theme.flashRgb} / ${alpha})`;
+      ctx.shadowColor = `rgb(${theme.flashRgb} / 72%)`;
       ctx.shadowBlur = 12;
 
       for (const rowIndex of flash.rows) {
@@ -389,8 +439,14 @@ export class GameComponent implements AfterViewInit {
 
     const devicePixelRatio = window.devicePixelRatio || 1;
     const rect = this.canvasElement.getBoundingClientRect();
-    const width = Math.max(1, Math.floor(rect.width * devicePixelRatio));
-    const height = Math.max(1, Math.floor(rect.height * devicePixelRatio));
+    const scaledWidth = Math.max(1, rect.width * devicePixelRatio);
+    const scaledHeight = Math.max(1, rect.height * devicePixelRatio);
+    const cellSize = Math.max(
+      1,
+      Math.floor(Math.min(scaledWidth / GRID_WIDTH, scaledHeight / GRID_HEIGHT)),
+    );
+    const width = cellSize * GRID_WIDTH;
+    const height = cellSize * GRID_HEIGHT;
 
     if (this.canvasElement.width === width && this.canvasElement.height === height) {
       return;
@@ -424,5 +480,28 @@ export class GameComponent implements AfterViewInit {
     }
 
     return Date.now();
+  }
+
+  private resolveInitialTheme(): ThemeMode {
+    if (typeof window === 'undefined') {
+      return 'night';
+    }
+
+    const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+    if (storedTheme === 'day' || storedTheme === 'night') {
+      return storedTheme;
+    }
+
+    return 'night';
+  }
+
+  private applyTheme(theme: ThemeMode): void {
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    }
   }
 }

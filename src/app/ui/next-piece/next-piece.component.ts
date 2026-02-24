@@ -10,6 +10,8 @@ import {
 import { getTetrominoMatrix } from '../../game/domain/tetromino';
 import { RotationState, TetrominoType } from '../../game/domain/types';
 
+type ThemeMode = 'night' | 'day';
+
 const PREVIEW_COLOR: Record<TetrominoType, string> = {
   I: '#38f0ff',
   O: '#ffe066',
@@ -20,6 +22,17 @@ const PREVIEW_COLOR: Record<TetrominoType, string> = {
   L: '#ffae70',
 };
 
+const PREVIEW_THEME: Record<ThemeMode, { readonly bg: string; readonly border: string }> = {
+  night: {
+    bg: '#0f172a',
+    border: 'rgb(130 152 201 / 35%)',
+  },
+  day: {
+    bg: '#eff5ff',
+    border: 'rgb(81 116 174 / 38%)',
+  },
+};
+
 @Component({
   selector: 'app-next-piece',
   templateUrl: './next-piece.component.html',
@@ -28,6 +41,7 @@ const PREVIEW_COLOR: Record<TetrominoType, string> = {
 })
 export class NextPieceComponent implements AfterViewInit {
   readonly nextPiece = input<TetrominoType | null>(null);
+  readonly theme = input<ThemeMode>('night');
 
   @ViewChild('previewCanvas', { static: true })
   private readonly previewCanvasRef?: ElementRef<HTMLCanvasElement>;
@@ -36,16 +50,16 @@ export class NextPieceComponent implements AfterViewInit {
   private canvasElement: HTMLCanvasElement | null = null;
 
   private readonly drawEffect = effect(() => {
-    this.redraw(this.nextPiece());
+    this.redraw(this.nextPiece(), this.theme());
   });
 
   ngAfterViewInit(): void {
     this.canvasElement = this.previewCanvasRef?.nativeElement ?? null;
     this.context = this.canvasElement?.getContext('2d') ?? null;
-    this.redraw(this.nextPiece());
+    this.redraw(this.nextPiece(), this.theme());
   }
 
-  private redraw(pieceType: TetrominoType | null): void {
+  private redraw(pieceType: TetrominoType | null, theme: ThemeMode): void {
     if (this.context === null || this.canvasElement === null) {
       return;
     }
@@ -55,9 +69,10 @@ export class NextPieceComponent implements AfterViewInit {
     const height = this.canvasElement.height;
 
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = '#0f172a';
+    const previewTheme = PREVIEW_THEME[theme];
+    ctx.fillStyle = previewTheme.bg;
     ctx.fillRect(0, 0, width, height);
-    ctx.strokeStyle = 'rgb(130 152 201 / 35%)';
+    ctx.strokeStyle = previewTheme.border;
     ctx.strokeRect(0.5, 0.5, width - 1, height - 1);
 
     if (pieceType === null) {

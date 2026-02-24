@@ -1,5 +1,83 @@
 :root {
   color-scheme: dark;
+  --page-bg-start: #223254;
+  --page-bg-end: #111827;
+  --text-primary: #edf1ff;
+  --text-muted: #a8b9e0;
+
+  --board-shell-shadow: rgb(4 8 18 / 44%);
+  --canvas-focus-ring: #a8c4ff;
+
+  --panel-border: #41527e;
+  --panel-bg-start: rgb(15 21 37 / 92%);
+  --panel-bg-end: rgb(18 26 46 / 92%);
+  --panel-shadow: rgb(5 8 16 / 34%);
+  --panel-title: #d9e7ff;
+  --panel-muted: #99aad1;
+  --panel-strong: #f4f8ff;
+
+  --button-border: #84a5f9;
+  --button-text: #08122c;
+  --button-bg-start: #f8fcff;
+  --button-bg-end: #c8daff;
+
+  --theme-btn-border: #5977b8;
+  --theme-btn-text: #deebff;
+  --theme-btn-bg-start: rgb(22 33 57 / 92%);
+  --theme-btn-bg-end: rgb(14 20 35 / 92%);
+  --theme-btn-active-border: #9ec0ff;
+  --theme-btn-active-bg-start: rgb(241 247 255 / 96%);
+  --theme-btn-active-bg-end: rgb(200 219 255 / 96%);
+  --theme-btn-active-shadow: rgb(145 181 251 / 58%);
+
+  --overlay-bg-start: rgb(39 58 98 / 78%);
+  --overlay-bg-end: rgb(8 10 19 / 86%);
+  --overlay-text: #b7c7ed;
+  --overlay-button-border: #98b6ff;
+  --overlay-button-text: #091123;
+  --overlay-button-bg-start: #ffffff;
+  --overlay-button-bg-end: #c8dbff;
+}
+
+:root[data-theme='day'] {
+  color-scheme: light;
+  --page-bg-start: #f5f9ff;
+  --page-bg-end: #dce8ff;
+  --text-primary: #12284a;
+  --text-muted: #3b5c8c;
+
+  --board-shell-shadow: rgb(71 103 149 / 25%);
+  --canvas-focus-ring: #4b74b9;
+
+  --panel-border: #9cb7df;
+  --panel-bg-start: rgb(255 255 255 / 94%);
+  --panel-bg-end: rgb(236 244 255 / 94%);
+  --panel-shadow: rgb(76 111 159 / 22%);
+  --panel-title: #16325b;
+  --panel-muted: #476692;
+  --panel-strong: #122947;
+
+  --button-border: #5e81be;
+  --button-text: #0f2748;
+  --button-bg-start: #f6faff;
+  --button-bg-end: #d8e8ff;
+
+  --theme-btn-border: #7f9ece;
+  --theme-btn-text: #244268;
+  --theme-btn-bg-start: rgb(250 253 255 / 96%);
+  --theme-btn-bg-end: rgb(226 238 255 / 96%);
+  --theme-btn-active-border: #5179bc;
+  --theme-btn-active-bg-start: rgb(230 241 255 / 97%);
+  --theme-btn-active-bg-end: rgb(196 220 255 / 97%);
+  --theme-btn-active-shadow: rgb(114 151 215 / 44%);
+
+  --overlay-bg-start: rgb(223 234 251 / 82%);
+  --overlay-bg-end: rgb(177 201 236 / 85%);
+  --overlay-text: #2e4f7f;
+  --overlay-button-border: #5d83bf;
+  --overlay-button-text: #0f2748;
+  --overlay-button-bg-start: #ffffff;
+  --overlay-button-bg-end: #d9eaff;
 }
 
 * {
@@ -10,6 +88,7 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: radial-gradient(circle at 10% 10%, #223254, #111827 56%);
-  color: #edf1ff;
+  background: radial-gradient(circle at 10% 10%, var(--page-bg-start), var(--page-bg-end) 56%);
+  color: var(--text-primary);
+  transition: background 180ms ease, color 180ms ease;
 }

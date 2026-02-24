@@ -1,15 +1,51 @@
 # Tetrigular
 
 Projet Angular standalone (TypeScript strict) avec moteur de jeu découplé et rendu Canvas 2D.
+Ce projet vise la compatibilité Node 20+ (Node >= 20.19.0 recommandé).
 
-## Lancer
+## Prérequis
+
+- Node.js >= 20.19.0
+- npm >= 9
+
+## Lancement local
 
 ```bash
 npm ci
-npm run start
+npm start
 ```
 
 Application: http://localhost:4200
+
+## Build production
+
+```bash
+npm run build
+```
+
+Alternative explicite:
+
+```bash
+npm run build:prod
+```
+
+Build généré dans `dist/` (selon Angular, typiquement `dist/tetris-angular/browser`).
+
+Build Docker:
+
+```bash
+docker build -t tetrigular .
+```
+
+## Déploiement Docker
+
+```bash
+docker build -t tetrigular .
+docker run --rm -p 8080:80 tetrigular
+```
+
+Le conteneur expose le port `80`.  
+Application disponible sur: http://localhost:8080
 
 ## Contrôles
 
@@ -28,6 +64,7 @@ Application: http://localhost:4200
 
 - `npm run start`: serveur de dev
 - `npm run build`: build production
+- `npm run build:prod`: build production explicite (`--configuration production`)
 - `npm run lint`: ESLint (Angular ESLint)
 - `npm run format`: Prettier (write)
 - `npm run test`: tests unitaires

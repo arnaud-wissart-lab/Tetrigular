@@ -5,16 +5,16 @@
 .hud {
   padding: 1rem;
   border-radius: 14px;
-  border: 1px solid #41527e;
-  background: linear-gradient(165deg, rgb(15 21 37 / 92%), rgb(18 26 46 / 92%));
-  box-shadow: 0 12px 28px rgb(5 8 16 / 34%);
+  border: 1px solid var(--panel-border);
+  background: linear-gradient(165deg, var(--panel-bg-start), var(--panel-bg-end));
+  box-shadow: 0 12px 28px var(--panel-shadow);
 }
 
 h2 {
   margin: 0 0 0.75rem;
   font-size: 1rem;
   letter-spacing: 0.02em;
-  color: #d9e7ff;
+  color: var(--panel-title);
 }
 
 .stats {
@@ -30,17 +30,17 @@ h2 {
 }
 
 dt {
-  color: #96a7cf;
+  color: var(--panel-muted);
 }
 
 dd {
   margin: 0;
   font-weight: 700;
-  color: #f4f8ff;
+  color: var(--panel-strong);
 }
 
 .keys {
   margin: 0.9rem 0 0;
-  color: #99aad1;
+  color: var(--panel-muted);
   font-size: 0.82rem;
 }
