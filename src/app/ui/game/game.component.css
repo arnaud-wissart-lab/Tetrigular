@@ -30,17 +30,17 @@
 
 .board-shell {
   position: relative;
+  width: min(100%, 520px, calc((100vh - 190px) / 2));
+  aspect-ratio: 1 / 2;
+  margin: 0 auto;
   border-radius: 14px;
   overflow: hidden;
 }
 
 .board-canvas {
   width: 100%;
-  max-width: 520px;
-  max-height: calc(100vh - 190px);
+  height: 100%;
   display: block;
-  margin: 0 auto;
-  aspect-ratio: 1 / 2;
   border-radius: inherit;
   outline: none;
   box-shadow: 0 16px 36px var(--board-shell-shadow);
@@ -79,11 +79,26 @@
 .theme-btn {
   border: 1px solid var(--theme-btn-border);
   border-radius: 10px;
-  padding: 0.5rem 0.75rem;
+  padding: 0.55rem 0.75rem;
   font-weight: 700;
   color: var(--theme-btn-text);
   background: linear-gradient(145deg, var(--theme-btn-bg-start), var(--theme-btn-bg-end));
   cursor: pointer;
+}
+
+.theme-btn-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.theme-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  stroke: currentcolor;
+  stroke-width: 1.8;
+  fill: none;
 }
 
 .theme-btn--active {
@@ -113,8 +128,8 @@
     grid-template-columns: 1fr;
   }
 
-  .board-canvas {
-    max-width: 460px;
+  .board-shell {
+    width: min(100%, 460px, calc((100vh - 170px) / 2));
   }
 
   .side-panel {

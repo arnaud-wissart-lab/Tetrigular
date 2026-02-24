@@ -325,7 +325,7 @@ export class GameComponent implements AfterViewInit {
     ctx.strokeStyle = theme.gridLine;
     ctx.lineWidth = 1;
 
-    for (let col = 0; col <= GRID_WIDTH; col += 1) {
+    for (let col = 1; col < GRID_WIDTH; col += 1) {
       const x = Math.round(col * cellWidth) + 0.5;
       ctx.beginPath();
       ctx.moveTo(x, 0);
@@ -333,7 +333,7 @@ export class GameComponent implements AfterViewInit {
       ctx.stroke();
     }
 
-    for (let row = 0; row <= GRID_HEIGHT; row += 1) {
+    for (let row = 1; row < GRID_HEIGHT; row += 1) {
       const y = Math.round(row * cellHeight) + 0.5;
       ctx.beginPath();
       ctx.moveTo(0, y);
