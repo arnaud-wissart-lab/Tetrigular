@@ -1,17 +1,22 @@
 name: CI
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
     paths:
       - 'src/**'
       - 'public/**'
+      - '.github/workflows/**'
       - 'angular.json'
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig*.json'
       - 'eslint.config.js'
+      - 'Dockerfile'
+      - 'docker-compose*.yml'
+      - 'nginx.conf'
       - 'scripts/**'
   pull_request:
     branches:
@@ -19,12 +24,23 @@ on:
     paths:
       - 'src/**'
       - 'public/**'
+      - '.github/workflows/**'
       - 'angular.json'
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig*.json'
       - 'eslint.config.js'
+      - 'Dockerfile'
+      - 'docker-compose*.yml'
+      - 'nginx.conf'
       - 'scripts/**'
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   ci:
@@ -45,20 +61,37 @@ jobs:
       - name: Installer les dépendances
         run: npm ci
 
-      - name: Build Angular
+      - name: Détecter les scripts NPM disponibles
+        id: detect-scripts
+        run: |
+          node <<'NODE' > "$GITHUB_OUTPUT"
+          const scripts = require('./package.json').scripts || {};
+          const has = (name) => typeof scripts[name] === 'string' && scripts[name].trim() !== '';
+          console.log(`has_lint=${has('lint')}`);
+          console.log(`has_test_ci=${has('test:ci')}`);
+          console.log(`has_test=${has('test')}`);
+          console.log(`has_build_prod=${has('build:prod')}`);
+          console.log(`has_build=${has('build')}`);
+          NODE
+
+      - name: Exécuter le lint
+        if: steps.detect-scripts.outputs.has_lint == 'true'
+        run: npm run lint
+
+      - name: Build Angular (production)
+        if: steps.detect-scripts.outputs.has_build_prod == 'true'
+        run: npm run build:prod
+
+      - name: Build Angular (fallback)
+        if: steps.detect-scripts.outputs.has_build_prod != 'true' && steps.detect-scripts.outputs.has_build == 'true'
         run: npm run build
 
-      - name: Vérifier la présence du script test
-        id: detect-tests
-        run: |
-          if node -e "const scripts=require('./package.json').scripts||{}; process.exit(typeof scripts.test==='string' && scripts.test.trim() !== '' ? 0 : 1)"; then
-            echo "has_test=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_test=false" >> "$GITHUB_OUTPUT"
-          fi
+      - name: Exécuter les tests (test:ci)
+        if: steps.detect-scripts.outputs.has_test_ci == 'true'
+        run: npm run test:ci
 
-      - name: Exécuter les tests
-        if: steps.detect-tests.outputs.has_test == 'true'
+      - name: Exécuter les tests (fallback test)
+        if: steps.detect-scripts.outputs.has_test_ci != 'true' && steps.detect-scripts.outputs.has_test == 'true'
         run: npm test -- --watch=false --progress=false
 
       - name: Publier l'artefact dist (debug)

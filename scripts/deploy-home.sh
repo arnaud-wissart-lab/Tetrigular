@@ -72,9 +72,23 @@ fi
 
 cd "$APP_DIR"
 
-log "Mise à jour Git sur origin/${DEPLOY_REF}"
-git fetch --prune origin
-git reset --hard "origin/${DEPLOY_REF}"
+log "Mise à jour Git et résolution de la référence ${DEPLOY_REF}"
+git fetch --prune --tags origin
+
+if [[ "$DEPLOY_REF" =~ ^[0-9a-f]{7,40}$ ]]; then
+  log "Référence détectée comme SHA, checkout détaché."
+  git checkout --detach "$DEPLOY_REF"
+elif git rev-parse -q --verify "refs/tags/${DEPLOY_REF}" >/dev/null; then
+  log "Référence détectée comme tag, checkout détaché."
+  git checkout --detach "refs/tags/${DEPLOY_REF}"
+else
+  log "Référence détectée comme branche, alignement sur origin/${DEPLOY_REF}."
+  git checkout -B "$DEPLOY_REF" "origin/${DEPLOY_REF}"
+  git reset --hard "origin/${DEPLOY_REF}"
+fi
+
+deployed_commit="$(git rev-parse --short HEAD)"
+log "Commit déployé: ${deployed_commit}"
 
 log "Build de l'image Docker"
 docker build -t tetris-app:latest .
