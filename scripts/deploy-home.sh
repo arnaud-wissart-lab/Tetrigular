@@ -21,14 +21,15 @@ require_env "GITHUB_REPOSITORY"
 SSH_PORT="${SSH_PORT:-22}"
 DEPLOY_REF="${DEPLOY_REF:-main}"
 DEPLOY_ENVIRONMENT="${DEPLOY_ENVIRONMENT:-home}"
-REPO_URL="https://github.com/${GITHUB_REPOSITORY}.git"
+REPO_SLUG="${GITHUB_REPOSITORY}"
+REPO_TOKEN="${GITHUB_TOKEN:-}"
 
 if [ "$DEPLOY_ENVIRONMENT" != "home" ]; then
   log "Environnement '${DEPLOY_ENVIRONMENT}' non reconnu pour ce script (attendu: home)."
   exit 1
 fi
 
-log "Déploiement de ${GITHUB_REPOSITORY}@${DEPLOY_REF} vers ${SSH_USER}@${SSH_HOST}:${SSH_PORT}."
+log "Déploiement de ${REPO_SLUG}@${DEPLOY_REF} vers ${SSH_USER}@${SSH_HOST}:${SSH_PORT}."
 
 ssh_key_file="$(mktemp)"
 cleanup() {
@@ -49,7 +50,7 @@ ssh_opts=(
 )
 
 ssh "${ssh_opts[@]}" "${SSH_USER}@${SSH_HOST}" \
-  bash -se -- "$DEPLOY_REF" "$REPO_URL" <<'REMOTE_SCRIPT'
+  bash -se -- "$DEPLOY_REF" "$REPO_SLUG" "$REPO_TOKEN" <<'REMOTE_SCRIPT'
 set -euo pipefail
 
 log() {
@@ -57,7 +58,20 @@ log() {
 }
 
 DEPLOY_REF="$1"
-REPO_URL="$2"
+REPO_SLUG="$2"
+REPO_TOKEN="${3:-}"
+REPO_URL="https://github.com/${REPO_SLUG}.git"
+
+git_with_auth() {
+  if [ -n "$REPO_TOKEN" ]; then
+    local auth_header
+    auth_header="$(printf 'x-access-token:%s' "$REPO_TOKEN" | base64 | tr -d '\n')"
+    git -c "http.extraheader=AUTHORIZATION: basic ${auth_header}" "$@"
+    return
+  fi
+
+  git "$@"
+}
 
 APP_DIR="/home/arnaud/apps/tetrigular"
 APP_PARENT_DIR="$(dirname "$APP_DIR")"
@@ -67,13 +81,17 @@ mkdir -p "$APP_PARENT_DIR"
 
 if [ ! -d "$APP_DIR/.git" ]; then
   log "Repository absent, clonage initial."
-  git clone "$REPO_URL" "$APP_DIR"
+  if ! git_with_auth clone "$REPO_URL" "$APP_DIR"; then
+    log "Clonage impossible. Si le repo est privé, vérifier que GITHUB_TOKEN est transmis."
+    exit 1
+  fi
 fi
 
 cd "$APP_DIR"
+git remote set-url origin "$REPO_URL"
 
 log "Mise à jour Git et résolution de la référence ${DEPLOY_REF}"
-git fetch --prune --tags origin
+git_with_auth fetch --prune --tags origin
 
 if [[ "$DEPLOY_REF" =~ ^[0-9a-f]{7,40}$ ]]; then
   log "Référence détectée comme SHA, checkout détaché."
