@@ -62,7 +62,7 @@ Application disponible sur: http://localhost:8080
 
 ## Capture GIF
 
-![Capture gameplay (placeholder)](docs/screenshots/animation.gif)
+![Capture gameplay (placeholder)](docs/screenshots/Animation.gif)
 
 ## Scripts
 
