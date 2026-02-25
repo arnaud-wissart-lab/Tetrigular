@@ -3,6 +3,8 @@
 Projet Angular standalone (TypeScript strict) avec moteur de jeu découplé et rendu Canvas 2D.
 Ce projet vise la compatibilité Node 20+ (Node >= 20.19.0 recommandé).
 
+Démo live : http://tetris.arnaudwissart.fr
+
 ## Prérequis
 
 - Node.js >= 20.19.0
