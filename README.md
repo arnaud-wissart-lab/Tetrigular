@@ -1,5 +1,8 @@
 # Tetrigular
 
+[![CI](https://github.com/arnaud-wissart-lab/Tetrigular/actions/workflows/ci.yml/badge.svg)](https://github.com/arnaud-wissart-lab/Tetrigular/actions/workflows/ci.yml)
+[![Déploiement Manuel](https://github.com/arnaud-wissart-lab/Tetrigular/actions/workflows/deploy-manual.yml/badge.svg)](https://github.com/arnaud-wissart-lab/Tetrigular/actions/workflows/deploy-manual.yml)
+
 Projet Angular standalone (TypeScript strict) avec moteur de jeu découplé et rendu Canvas 2D.
 Ce projet vise la compatibilité Node 20+ (Node >= 20.19.0 recommandé).
 
