@@ -8,6 +8,8 @@ Ce projet vise la compatibilité Node 20+ (Node >= 20.19.0 recommandé).
 
 Démo live : http://tetris.arnaudwissart.fr
 
+![Capture gameplay](docs/screenshots/Animation.gif)
+
 ## Prérequis
 
 - Node.js >= 20.19.0
@@ -59,10 +61,6 @@ Application disponible sur: http://localhost:8080
 - `Espace`: lâcher (chute instantanée)
 - `↑`: rotation
 - `P`: pause / reprise
-
-## Capture GIF
-
-![Capture gameplay (placeholder)](docs/screenshots/Animation.gif)
 
 ## Scripts
 
