@@ -1,7 +1,6 @@
 # Tetrigular
 Jeu Tetris-like Angular conçu comme vitrine frontend: jouabilité clavier, moteur découplé et qualité logicielle industrialisée.
 
-## Badges
 [![CI](https://github.com/arnaud-wissart/tetrigular/actions/workflows/ci.yml/badge.svg)](https://github.com/arnaud-wissart/tetrigular/actions/workflows/ci.yml)
 [![Déploiement manuel](https://github.com/arnaud-wissart/tetrigular/actions/workflows/deploy-manual.yml/badge.svg)](https://github.com/arnaud-wissart/tetrigular/actions/workflows/deploy-manual.yml)
 [![Licence MIT](https://img.shields.io/badge/Licence-MIT-green.svg)](./LICENSE)
