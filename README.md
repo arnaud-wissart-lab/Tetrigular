@@ -1,154 +1,98 @@
-# 🧱 Tetrigular
+# Tetrigular
+Jeu Tetris-like Angular conçu comme vitrine frontend: jouabilité clavier, moteur découplé et qualité logicielle industrialisée.
 
-Jeu Tetris-like développé en **Angular standalone (TypeScript strict)**
-avec moteur de jeu découplé et rendu **Canvas 2D**. Déployé sur
-infrastructure personnelle via **runner GitHub self-hosted + Docker**.
+## Badges
+[![CI](https://github.com/arnaud-wissart/tetrigular/actions/workflows/ci.yml/badge.svg)](https://github.com/arnaud-wissart/tetrigular/actions/workflows/ci.yml)
+[![Déploiement manuel](https://github.com/arnaud-wissart/tetrigular/actions/workflows/deploy-manual.yml/badge.svg)](https://github.com/arnaud-wissart/tetrigular/actions/workflows/deploy-manual.yml)
 
-[![CI](https://github.com/arnaud-wissart-lab/Tetrigular/actions/workflows/ci.yml/badge.svg)](https://github.com/arnaud-wissart-lab/Tetrigular/actions/workflows/ci.yml)
-[![Déploiement
-Manuel](https://github.com/arnaud-wissart-lab/Tetrigular/actions/workflows/deploy-manual.yml/badge.svg)](https://github.com/arnaud-wissart-lab/Tetrigular/actions/workflows/deploy-manual.yml)
+`Licence`: TODO
 
-------------------------------------------------------------------------
+## Démo live
+- Démo live: [http://tetris.arnaudwissart.fr](http://tetris.arnaudwissart.fr)
+- Releases: [GitHub Releases](https://github.com/arnaud-wissart/tetrigular/releases)
 
-## 🎮 Démo live
+## Ce que ça démontre
+- Architecture front séparée par responsabilités: `src/app/core/input`, `src/app/game/domain`, `src/app/game/engine`, `src/app/ui`.
+- Moteur de jeu découplé (`GameEngine`) avec boucle `requestAnimationFrame`.
+- Jouabilité clavier complète avec DAS/ARR (`120 ms` / `30 ms`), soft drop, hard drop, rotations et pause.
+- Scoring déterministe (`100 / 300 / 500 / 800`) et progression du niveau toutes les 10 lignes.
+- Randomizer `7-bag` (`Bag7Randomizer`) pour la distribution des tétriminos.
+- Rendu Canvas 2D avec ghost piece, animation des lignes effacées et aperçu de la prochaine pièce.
+- Qualité front outillée: ESLint, tests unitaires, build production, audit sécurité et CI GitHub Actions.
+- Chaîne de livraison documentée: workflow de déploiement manuel + image Docker Nginx.
 
-👉 http://tetris.arnaudwissart.fr
+## Captures
+1. Gameplay (GIF)
 
-![Capture gameplay](docs/screenshots/Animation.gif)
+![Gameplay Tetrigular](./docs/screenshots/Animation.gif)
 
-------------------------------------------------------------------------
+2. TODO - Ajouter une capture HUD (score/lignes/niveau) dans `docs/screenshots/`.
+3. TODO - Ajouter une capture des états `Pause` et `Game Over` dans `docs/screenshots/`.
 
-## 💡 Pourquoi ce projet ?
-
-Tetrigular démontre :
-
--   Architecture Angular moderne (standalone components)
--   Séparation moteur de jeu / rendu graphique
--   Gestion fine des contrôles (DAS / ARR)
--   CI complète (lint, tests, build, audit sécurité)
--   Déploiement Docker automatisé via workflow GitHub Actions
--   Runner self-hosted Linux
-
-Projet volontairement simple fonctionnellement mais exigeant
-techniquement.
-
-------------------------------------------------------------------------
-
-## 🏗 Architecture
-
-``` mermaid
-graph TD
-    A[Angular UI] --> B[Moteur de jeu découplé]
-    B --> C[Canvas 2D Renderer]
+## Architecture
+```mermaid
+flowchart LR
+  K["Clavier"] --> I["InputService"]
+  I --> E["GameEngine"]
+  E --> D["Domain: board, tetromino, scoring, bag7"]
+  E --> S["Etat: score, lignes, niveau, status"]
+  S --> G["GameComponent (signals)"]
+  G --> C["Canvas 2D (grille, ghost, flashes)"]
+  S --> U["HUD + NextPiece + Overlay"]
 ```
 
-------------------------------------------------------------------------
+## Stack technique
+- Runtime: Node.js `20.19.0` (`.node-version`) et npm `>=9` (`package.json > engines`).
+- Package manager: npm (`packageManager: npm@11.6.2`).
+- Frontend: Angular `^21.1.0`, Angular Router `^21.1.5`, TypeScript `~5.9.2`, RxJS `~7.8.0`.
+- Qualité: ESLint `^9.39.3`, `angular-eslint` `21.2.0`, Prettier `^3.8.1`.
+- Conteneurisation: `Dockerfile` multi-stage (`node:20-alpine` build, `nginx:alpine` runtime).
+- CI/CD: `.github/workflows/ci.yml` et `.github/workflows/deploy-manual.yml`.
 
-## 🔧 Stack technique
-
--   Angular standalone
--   TypeScript strict
--   Canvas 2D API
--   ESLint (Angular ESLint)
--   Prettier
--   Tests unitaires (CI)
--   Docker (nginx runtime)
--   GitHub Actions (runner self-hosted)
-
-------------------------------------------------------------------------
-
-## 🚀 Lancement local
-
-### Prérequis
-
--   Node.js \>= 20.19.0
--   npm \>= 9
-
-``` bash
+## Démarrage rapide (dev local)
+```bash
 npm ci
-npm start
+npm run start
 ```
 
-Application disponible sur : http://localhost:4200
+Ouvrir l'URL locale affichée par Angular CLI.
 
-------------------------------------------------------------------------
+### Contrôles
+- `←` / `→`: déplacement horizontal (DAS/ARR).
+- `↓` (maintenu): soft drop.
+- `Espace`: hard drop.
+- `↑` ou `X`: rotation horaire.
+- `Z`: rotation anti-horaire.
+- `P`: pause / reprise.
 
-## 🐳 Build & Docker
-
-### Build production
-
-``` bash
-npm run build
-```
-
-### Image Docker
-
-``` bash
-docker build -t tetrigular .
-docker run --rm -p 8080:80 tetrigular
-```
-
-Accessible sur : http://localhost:8080
-
-------------------------------------------------------------------------
-
-## 🔐 Déploiement home
-
-Déploiement via workflow GitHub Actions (`Déploiement Manuel`) en
-`workflow_dispatch`.
-
--   Rebuild image Docker
--   Déploiement via SSH sur `geekom-a5`
--   Redémarrage du conteneur `tetris`
--   Port exposé : `8081`
-
-Secrets requis (organisation) : - `SSH_HOST` - `SSH_USER` -
-`SSH_PRIVATE_KEY` - `SSH_PORT`
-
-------------------------------------------------------------------------
-
-## 🎮 Contrôles
-
--   ← / → : déplacement
--   ↓ (maintenu) : accélération
--   Espace : chute instantanée
--   ↑ : rotation
--   P : pause / reprise
-
-------------------------------------------------------------------------
-
-## 🧪 Scripts principaux
-
--   `npm run start`
--   `npm run build`
--   `npm run lint`
--   `npm run format`
--   `npm run test`
--   `npm run audit`
--   `npm run ci`
-
-------------------------------------------------------------------------
-
-## 🔄 Mise à jour dépendances
-
-``` bash
-npm outdated
-npm update
-npx ng update
+## Tests
+```bash
+npm run test
+npm run test:ci
+npm run lint
+npm run build:prod
 npm run ci
 ```
 
-Dependabot configuré (hebdomadaire, max 5 PR ouvertes).
+- Unitaires: `npm run test` et `npm run test:ci`.
+- Intégration: TODO (pas de commande dédiée détectée).
+- E2E: TODO (aucune configuration e2e détectée).
 
-------------------------------------------------------------------------
+## Sécurité & configuration
+- Variables applicatives `.env`: aucune variable requise détectée côté application.
+- Variables d'environnement référencées dans CI/déploiement:
 
-## 🎯 Objectif
+| Variable | Usage | Exemple (placeholder) |
+| --- | --- | --- |
+| `CI` | `.github/workflows/ci.yml` et `scripts/audit-ci.mjs` | `<true_or_false>` |
+| `SSH_HOST` | Secret GitHub Actions (`deploy-manual.yml`) | `<ssh_host>` |
+| `SSH_USER` | Secret GitHub Actions (`deploy-manual.yml`) | `<ssh_user>` |
+| `SSH_PRIVATE_KEY` | Secret GitHub Actions (`deploy-manual.yml`) | `<private_key_pem>` |
+| `SSH_PORT` | Secret GitHub Actions (`deploy-manual.yml`, optionnel) | `<22>` |
+| `GITHUB_TOKEN` | Token workflow (`deploy-manual.yml`) | `<github_token>` |
 
-Tetrigular est un projet démonstrateur mettant en avant :
+- Audit sécurité dépendances production: `npm run audit` (`npm audit --omit=dev --audit-level=high`).
+- Détails opérationnels de déploiement: [docs/RUNBOOK.md](./docs/RUNBOOK.md).
 
--   qualité de code frontend
--   structuration moteur/affichage
--   automatisation CI/CD
--   déploiement reproductible personnel
-
-Il sert de vitrine technique frontend moderne.
+## Licence
+Licence : TODO (fichier `LICENSE` absent).
