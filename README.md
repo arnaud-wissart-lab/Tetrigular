@@ -4,8 +4,7 @@ Jeu Tetris-like Angular conçu comme vitrine frontend: jouabilité clavier, mote
 ## Badges
 [![CI](https://github.com/arnaud-wissart/tetrigular/actions/workflows/ci.yml/badge.svg)](https://github.com/arnaud-wissart/tetrigular/actions/workflows/ci.yml)
 [![Déploiement manuel](https://github.com/arnaud-wissart/tetrigular/actions/workflows/deploy-manual.yml/badge.svg)](https://github.com/arnaud-wissart/tetrigular/actions/workflows/deploy-manual.yml)
-
-`Licence`: MIT
+[![Licence MIT](https://img.shields.io/badge/Licence-MIT-green.svg)](./LICENSE)
 
 ## Démo live
 - Démo live: [http://tetris.arnaudwissart.fr](http://tetris.arnaudwissart.fr)
