@@ -6,7 +6,7 @@ Jeu Tetris-like Angular conçu comme vitrine frontend: jouabilité clavier, mote
 [![Licence MIT](https://img.shields.io/badge/Licence-MIT-green.svg)](./LICENSE)
 
 ## Démo live
-- Démo live: [http://tetris.arnaudwissart.fr](http://tetris.arnaudwissart.fr)
+- Démo live: [https://tetris.arnaudwissart.fr](https://tetris.arnaudwissart.fr)
 
 ## Ce que ça démontre
 - Architecture front séparée par responsabilités: `src/app/core/input`, `src/app/game/domain`, `src/app/game/engine`, `src/app/ui`.
