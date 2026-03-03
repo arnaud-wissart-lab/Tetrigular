@@ -68,8 +68,6 @@ npm run ci
 ```
 
 - Unitaires: `npm run test` et `npm run test:ci`.
-- Intégration: TODO (pas de commande dédiée détectée).
-- E2E: TODO (aucune configuration e2e détectée).
 
 ## Sécurité & configuration
 - Variables applicatives `.env`: aucune variable requise détectée côté application.
