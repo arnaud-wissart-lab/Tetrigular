@@ -9,7 +9,6 @@ Jeu Tetris-like Angular conçu comme vitrine frontend: jouabilité clavier, mote
 
 ## Démo live
 - Démo live: [http://tetris.arnaudwissart.fr](http://tetris.arnaudwissart.fr)
-- Releases: [GitHub Releases](https://github.com/arnaud-wissart/tetrigular/releases)
 
 ## Ce que ça démontre
 - Architecture front séparée par responsabilités: `src/app/core/input`, `src/app/game/domain`, `src/app/game/engine`, `src/app/ui`.
@@ -22,12 +21,8 @@ Jeu Tetris-like Angular conçu comme vitrine frontend: jouabilité clavier, mote
 - Chaîne de livraison documentée: workflow de déploiement manuel + image Docker Nginx.
 
 ## Captures
-1. Gameplay (GIF)
 
 ![Gameplay Tetrigular](./docs/screenshots/Animation.gif)
-
-2. TODO - Ajouter une capture HUD (score/lignes/niveau) dans `docs/screenshots/`.
-3. TODO - Ajouter une capture des états `Pause` et `Game Over` dans `docs/screenshots/`.
 
 ## Architecture
 ```mermaid
