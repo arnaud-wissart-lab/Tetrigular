@@ -35,11 +35,11 @@ flowchart LR
 ```
 
 ## Stack technique
-- Runtime: Node.js `20.19.0` (`.node-version`) et npm `>=9` (`package.json > engines`).
+- Runtime cible: Node.js `20.20.1` (`.node-version` / `.nvmrc`) et npm `>=9` (`package.json > engines`).
 - Package manager: npm (`packageManager: npm@11.6.2`).
-- Frontend: Angular `^21.1.0`, Angular Router `^21.1.5`, TypeScript `~5.9.2`, RxJS `~7.8.0`.
-- Qualité: ESLint `^9.39.3`, `angular-eslint` `21.2.0`, Prettier `^3.8.1`.
-- Conteneurisation: `Dockerfile` multi-stage (`node:20-alpine` build, `nginx:alpine` runtime).
+- Frontend: Angular `^21.2.4`, Angular CLI / Build `^21.2.2`, TypeScript `~5.9.2`, RxJS `~7.8.0`.
+- Qualité: ESLint `^9.39.4`, `angular-eslint` `21.2.0`, `typescript-eslint` `^8.57.1`, Vitest `^4.1.0`, Prettier `^3.8.1`.
+- Conteneurisation: `Dockerfile` multi-stage (`node:20.20.1-alpine` build, `nginx:alpine` runtime).
 - CI/CD: `.github/workflows/ci.yml` et `.github/workflows/deploy-manual.yml`.
 
 ## Démarrage rapide (dev local)
