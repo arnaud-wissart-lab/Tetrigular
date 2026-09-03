@@ -1,8 +1,14 @@
 import { spawnSync } from 'node:child_process';
 
-const result = spawnSync('npm audit --omit=dev --audit-level=high', {
+const npmExecPath = process.env.npm_execpath;
+const command = npmExecPath === undefined ? 'npm' : process.execPath;
+const args =
+  npmExecPath === undefined
+    ? ['audit', '--omit=dev', '--audit-level=high']
+    : [npmExecPath, 'audit', '--omit=dev', '--audit-level=high'];
+
+const result = spawnSync(command, args, {
   stdio: 'inherit',
-  shell: true,
   env: {
     ...process.env,
     CI: 'true',
