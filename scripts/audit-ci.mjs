@@ -4,8 +4,8 @@ const npmExecPath = process.env.npm_execpath;
 const command = npmExecPath === undefined ? 'npm' : process.execPath;
 const args =
   npmExecPath === undefined
-    ? ['audit', '--omit=dev', '--audit-level=high']
-    : [npmExecPath, 'audit', '--omit=dev', '--audit-level=high'];
+    ? ['audit', '--audit-level=high']
+    : [npmExecPath, 'audit', '--audit-level=high'];
 
 const result = spawnSync(command, args, {
   stdio: 'inherit',
