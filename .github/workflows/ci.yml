@@ -64,13 +64,16 @@ jobs:
       - name: Exécuter le lint
         run: npm run lint
 
+      - name: Vérifier le formatage
+        run: npm run format:check
+
       - name: Exécuter les tests
         run: npm run test:ci
 
       - name: Build Angular de production
         run: npm run build:prod
 
-      - name: Auditer les dépendances de production
+      - name: Auditer les dépendances
         run: npm run audit
 
       - name: Publier l'artefact dist (debug)
