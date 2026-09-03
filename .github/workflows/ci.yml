@@ -44,7 +44,7 @@ permissions:
 
 jobs:
   ci:
-    runs-on: [self-hosted, linux, ci]
+    runs-on: ubuntu-latest
     env:
       CI: true
 
@@ -61,38 +61,17 @@ jobs:
       - name: Installer les dépendances
         run: npm ci
 
-      - name: Détecter les scripts NPM disponibles
-        id: detect-scripts
-        run: |
-          node <<'NODE' > "$GITHUB_OUTPUT"
-          const scripts = require('./package.json').scripts || {};
-          const has = (name) => typeof scripts[name] === 'string' && scripts[name].trim() !== '';
-          console.log(`has_lint=${has('lint')}`);
-          console.log(`has_test_ci=${has('test:ci')}`);
-          console.log(`has_test=${has('test')}`);
-          console.log(`has_build_prod=${has('build:prod')}`);
-          console.log(`has_build=${has('build')}`);
-          NODE
-
       - name: Exécuter le lint
-        if: steps.detect-scripts.outputs.has_lint == 'true'
         run: npm run lint
 
-      - name: Build Angular (production)
-        if: steps.detect-scripts.outputs.has_build_prod == 'true'
-        run: npm run build:prod
-
-      - name: Build Angular (fallback)
-        if: steps.detect-scripts.outputs.has_build_prod != 'true' && steps.detect-scripts.outputs.has_build == 'true'
-        run: npm run build
-
-      - name: Exécuter les tests (test:ci)
-        if: steps.detect-scripts.outputs.has_test_ci == 'true'
+      - name: Exécuter les tests
         run: npm run test:ci
 
-      - name: Exécuter les tests (fallback test)
-        if: steps.detect-scripts.outputs.has_test_ci != 'true' && steps.detect-scripts.outputs.has_test == 'true'
-        run: npm test -- --watch=false --progress=false
+      - name: Build Angular de production
+        run: npm run build:prod
+
+      - name: Auditer les dépendances de production
+        run: npm run audit
 
       - name: Publier l'artefact dist (debug)
         if: success()
