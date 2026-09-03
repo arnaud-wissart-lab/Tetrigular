@@ -16,7 +16,5 @@ export interface GameEngineState extends ScoreState {
 }
 
 export type StateListener = (state: GameEngineState) => void;
-export type BoardListener = (board: Grid) => void;
-export type ScoreListener = (score: ScoreState) => void;
 export type LinesClearedListener = (rows: readonly number[]) => void;
 export type Unsubscribe = () => void;
