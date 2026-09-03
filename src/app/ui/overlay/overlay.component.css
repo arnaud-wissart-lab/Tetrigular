@@ -35,11 +35,7 @@ button {
   padding: 0.55rem 1rem;
   font-weight: 700;
   color: var(--overlay-button-text);
-  background: linear-gradient(
-    135deg,
-    var(--overlay-button-bg-start),
-    var(--overlay-button-bg-end)
-  );
+  background: linear-gradient(135deg, var(--overlay-button-bg-start), var(--overlay-button-bg-end));
   cursor: pointer;
 }
 

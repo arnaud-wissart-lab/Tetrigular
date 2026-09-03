@@ -17,15 +17,7 @@ import {
   RotationState,
   TetrominoType,
 } from '../domain/types';
-import {
-  BoardListener,
-  GameEngineState,
-  LinesClearedListener,
-  ScoreListener,
-  ScoreState,
-  StateListener,
-  Unsubscribe,
-} from './game-state';
+import { GameEngineState, LinesClearedListener, StateListener, Unsubscribe } from './game-state';
 
 interface PieceRandomizer {
   next(): TetrominoType;
@@ -95,8 +87,6 @@ export class GameEngine {
   private readonly cancelFrame: (handle: number) => void;
 
   private readonly stateBus = new EventBus<GameEngineState>();
-  private readonly boardBus = new EventBus<Grid>();
-  private readonly scoreBus = new EventBus<ScoreState>();
   private readonly linesClearedBus = new EventBus<readonly number[]>();
 
   private rafHandle: number | null = null;
@@ -135,14 +125,6 @@ export class GameEngine {
     return this.stateBus.subscribe(listener);
   }
 
-  onBoardChange(listener: BoardListener): Unsubscribe {
-    return this.boardBus.subscribe(listener);
-  }
-
-  onScoreChange(listener: ScoreListener): Unsubscribe {
-    return this.scoreBus.subscribe(listener);
-  }
-
   onLinesCleared(listener: LinesClearedListener): Unsubscribe {
     return this.linesClearedBus.subscribe(listener);
   }
@@ -152,18 +134,6 @@ export class GameEngine {
       ...this.state,
       grid: cloneGrid(this.state.grid),
       currentPiece: this.state.currentPiece === null ? null : { ...this.state.currentPiece },
-    };
-  }
-
-  getBoard(): Grid {
-    return this.composeBoard();
-  }
-
-  getScore(): ScoreState {
-    return {
-      score: this.state.score,
-      lines: this.state.lines,
-      level: this.state.level,
     };
   }
 
@@ -177,7 +147,7 @@ export class GameEngine {
         ...this.state,
         status: 'running',
       };
-      this.publishState(false, false);
+      this.publishState();
       this.startLoop();
       return;
     }
@@ -195,7 +165,7 @@ export class GameEngine {
       status: 'paused',
     };
     this.stopLoop();
-    this.publishState(false, false);
+    this.publishState();
   }
 
   resume(): void {
@@ -223,7 +193,7 @@ export class GameEngine {
     this.grounded = false;
     this.lockResetCount = 0;
     this.softDropEnabled = false;
-    this.publishState(true, true);
+    this.publishState();
   }
 
   moveLeft(): boolean {
@@ -302,7 +272,7 @@ export class GameEngine {
     this.grounded = false;
     this.lockResetCount = 0;
     this.softDropEnabled = false;
-    this.publishState(true, true);
+    this.publishState();
 
     if (gameOver) {
       this.stopLoop();
@@ -372,7 +342,7 @@ export class GameEngine {
       currentPiece: candidate,
     };
     this.resetLockDelayAfterAction();
-    this.publishState(true, false);
+    this.publishState();
     return true;
   }
 
@@ -399,7 +369,7 @@ export class GameEngine {
         currentPiece: candidate,
       };
       this.resetLockDelayAfterAction();
-      this.publishState(true, false);
+      this.publishState();
       return true;
     }
 
@@ -426,7 +396,7 @@ export class GameEngine {
     };
     this.grounded = false;
     this.lockDelayElapsedMs = 0;
-    this.publishState(true, false);
+    this.publishState();
     return true;
   }
 
@@ -493,7 +463,7 @@ export class GameEngine {
     this.lockDelayElapsedMs = 0;
     this.grounded = false;
     this.lockResetCount = 0;
-    this.publishState(true, true);
+    this.publishState();
     if (clearedRows.length > 0) {
       this.linesClearedBus.emit(clearedRows);
     }
@@ -536,19 +506,6 @@ export class GameEngine {
     };
   }
 
-  private composeBoard(): Grid {
-    const board = cloneGrid(this.state.grid);
-    if (this.state.currentPiece === null) {
-      return board;
-    }
-
-    if (hasCollision(this.state.grid, this.state.currentPiece)) {
-      return board;
-    }
-
-    return mergePiece(board, this.state.currentPiece);
-  }
-
   private getClearedRows(grid: Grid): number[] {
     const rows: number[] = [];
 
@@ -570,13 +527,7 @@ export class GameEngine {
     return hasCollision(this.state.grid, pieceBelow);
   }
 
-  private publishState(boardChanged: boolean, scoreChanged: boolean): void {
+  private publishState(): void {
     this.stateBus.emit(this.getState());
-    if (boardChanged) {
-      this.boardBus.emit(this.getBoard());
-    }
-    if (scoreChanged) {
-      this.scoreBus.emit(this.getScore());
-    }
   }
 }
