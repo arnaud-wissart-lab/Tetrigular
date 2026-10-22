@@ -51,11 +51,11 @@ flowchart LR
 
 ## Stack technique
 
-- Runtime cible : Node.js `20.20.1` (`.node-version` / `.nvmrc`) et npm `>=9` (`package.json > engines`).
+- Runtime cible : Node.js `24.22.1` (`.node-version` / `.nvmrc`) et npm `>=9` (`package.json > engines`).
 - Gestionnaire de paquets : npm (`packageManager: npm@11.6.2`).
 - Frontend : Angular `21.2.22`, Angular CLI / Build `21.2.23`, TypeScript `5.9.3`, RxJS `~7.8.0`.
 - Qualité : ESLint `^10.9.1`, `angular-eslint` `21.4.0`, `typescript-eslint` `^8.69.0`, Vitest `^4.1.11`, Prettier `^3.9.6`.
-- Conteneurisation : `Dockerfile` multi-stage (`node:20.20.1-alpine` pour le build, `nginx:alpine` à l’exécution).
+- Conteneurisation : `Dockerfile` multi-stage (`node:24.22.1-alpine` pour le build, `nginx:alpine` à l’exécution).
 - CI/CD : CI publique sur `ubuntu-latest` (`npm ci`, formatage, lint, tests, build de production, audit complet) et déploiement manuel isolé.
 
 ## Démarrage rapide
